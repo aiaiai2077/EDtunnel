@@ -5,13 +5,13 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "deploy": "wrangler deploy",
-    "build": "wrangler deploy --dry-run",
-    "dev": "wrangler dev --remote",
-    "dev-local": "wrangler dev src/index.js --remote",
-    "bundle": "esbuild src/index.js --bundle --outfile=dist/bundle.js --format=esm --platform=browser --external:cloudflare:sockets --minify",
-    "obfuscate": "npm run bundle && javascript-obfuscator dist/bundle.js --output _worker.js --compact true --identifier-names-generator hexadecimal --rename-globals true --string-array true --string-array-threshold 1 --string-array-encoding base64 --transform-object-keys true --seed 0"
-  },
+  "deploy": "wrangler deploy",
+  "build": "wrangler deploy --dry-run",
+  "dev": "wrangler dev --remote",
+  "dev-local": "wrangler dev 明文.js --remote",
+  "bundle": "esbuild 明文.js --bundle --outfile=dist/bundle.js --format=esm --platform=browser --external:cloudflare:sockets --minify",
+  "obfuscate": "npm run bundle && javascript-obfuscator dist/bundle.js --output _worker.js --compact true --identifier-names-generator hexadecimal --rename-globals true --string-array true --string-array-threshold 1 --string-array-encoding base64 --transform-object-keys true --seed 0"
+},
   "author": "",
   "license": "ISC",
   "devDependencies": {
