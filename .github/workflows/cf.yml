@@ -41,7 +41,6 @@ on:
 
 env:
   GIT_REF: ${{ github.event.inputs.commit || github.ref }}
-  WORKERS_ENV: dev
 
 jobs:
   deploy:
@@ -55,31 +54,21 @@ jobs:
           ref: ${{ env.GIT_REF }}
           fetch-depth: 0
 
-      - name: 设置部署环境变量
-        run: |
-          echo "WORKERS_ENV=${{ github.event.inputs.environment || 'dev' }}" >> $GITHUB_ENV
-          echo "COMMIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
-
-      - name: Tag标签强制prod环境
-        if: github.ref_type == 'tag'
-        run: echo "WORKERS_ENV=prod" >> $GITHUB_ENV
-
-      - name: 配置 Node24（官方最新默认版本，无弃用警告）
+      - name: 🟢 Setup Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: "24"
 
-      - name: 安装项目依赖 & 全局最新wrangler
+      - name: 安装依赖以及最新 Wrangler
         run: |
           npm i
           npm install -g wrangler@latest
 
-      - name: 执行Cloudflare Worker部署
-        run: wrangler deploy --env ${{ env.WORKERS_ENV }}
+      - name: 部署 Cloudflare‑Worker（无多环境）
+        run: wrangler deploy
         env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          GIT_COMMIT_ID: ${{ env.GIT_REF }}
 
-      - name: 部署完成提示
-        run: echo "::notice::Deployed to ${WORKERS_ENV} / ${GIT_REF} @ ${COMMIT_SHA}"
+      - name: 🎤 Notice
+        run: echo "::notice::部署完成，分支：${GIT_REF}"
